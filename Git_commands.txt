@@ -1,0 +1,30 @@
+Note: should be in the same directory; use cd
+
+download the whole project as a folder: 
+git clone url 
+
+Gives information
+git status 
+
+1.
+git add filename.py 
+git add -A for everything 
+
+2.
+git commit -m "added filename.py"
+git commit 
+esc 
+:wq
+
+3.
+git push 
+
+
+First thing to do before you start :
+git pull 
+Already up-to-date 
+
+
+
+
+
