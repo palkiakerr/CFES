@@ -13,7 +13,7 @@ int solve(int dimension, double boundary[], int boundaryflag[]);
 int main(int argc, char *argv[]){
 	
 
-	// Basic inputs from arguments
+	// Basic inputs from arguments, matrix size and filename
 	int dimension;
 	char filename[50];
 	sscanf(argv[1], "%d", &dimension);
@@ -21,37 +21,30 @@ int main(int argc, char *argv[]){
 
 
 
-	// Create and fill matrix, readboundary modifies
-	// the matrix in-place
-	double matrix[dimension*dimension];
+	// Create and fill matrix, we use the naming convention for a normal
+	// matrix problem i.e. Ax=b
+	double b[dimension*dimension];
+
+	// Secondary matrix to hold information on wether or not each entry
+	// is a boundary condition and should be skipped in calulation
 	int boundaryflag[dimension*dimension];
-	readboundary(matrix, filename, boundaryflag);
+
+	// Reads in the file containing the problem
+	readboundary(b, filename, boundaryflag);
+
+	// Passes the matrix system (Ax=b) to the solver
+	solve(dimension, b, boundaryflag);
 
 
-/*
-	for(int x=0;x<(dimension*dimension);x++){
-
-		printf("%.0f ",matrix[x]);
-
-		if(((x+1)%dimension)==0){
-			printf("\n");
-		}
-	}
-
-	printf("\n");
-*/
-
-	solve(dimension, matrix, boundaryflag);
 	return 0;
-
 }
 
 
 
-int readboundary(double tgt[], char src[50], int boundaryflag[]){
+int readboundary(double b[], char src[50], int boundaryflag[]){
 
-// tgt is array to write values to
-// src is the string holding file location
+	// b is the matrix (Ax=b) that holds information about the boundary conditions
+	// src is the string holding file location
 
 
 	// Open src and check for bad file
@@ -68,22 +61,26 @@ int readboundary(double tgt[], char src[50], int boundaryflag[]){
    	char c;
    	int count = 0;
    	
+
     while(1){
+
+    	// Read in the problem once character at a time
     	c = fgetc(fp);
     	
+    	// Ignore newlines and stop ant the end of the file
     	if(c==EOF){break;}
     	if(c=='\n'){continue;}
 
-    	// Remember what zeros and number are boundaries using a second vector
+    	// Remember which zeros and numbers are boundary conditions using a second vector
     	// called boundaryflag
     	if(c=='.'){
-    		tgt[count]=0;
+    		b[count]=0;
     		boundaryflag[count]=0;
     	}
 
-    	// Shift ASCII table
+    	// Shift ASCII table to turn che character for a number into the number itself
     	else{
-    		tgt[count] = c-48;
+    		b[count] = c-48;
     		boundaryflag[count] = 1;
     	}
 
@@ -91,20 +88,22 @@ int readboundary(double tgt[], char src[50], int boundaryflag[]){
 
     }
 
+    fclose(fp);
+
    	// Return sucess
    	return 0;
 
 }
 
 
-int solve(int dim, double variables[], int boundaryflag[]){
+int solve(int dim, double bpass[], int boundaryflag[]){
 
 	// Create/Convert arrays into gsl matrix types
 	// Create coefficients array and turn it into a matrix
 	gsl_matrix *A = gsl_matrix_alloc(dim*dim,dim*dim);
 
 	// Create b vector from passed array (boundary conditions)
-	gsl_vector_view b = gsl_vector_view_array(variables, dim*dim);
+	gsl_vector_view b = gsl_vector_view_array(bpass, dim*dim);
 
 	// Create empty "x" vector
 	gsl_vector *x = gsl_vector_alloc(dim*dim);
@@ -141,12 +140,10 @@ int solve(int dim, double variables[], int boundaryflag[]){
 	}
 
 
-	FILE *fp;
-	fp = fopen("out.txt", "w");
-	gsl_matrix_fprintf(fp,A,"%f");
 
 
-
+	// Now solve the matrix sysstem Ax=b using LU Decomposition (the
+	// direct matrix method)
 	int s;
 
     gsl_permutation * p = gsl_permutation_alloc (dim*dim);
