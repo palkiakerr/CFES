@@ -122,11 +122,11 @@ int solve(int dim, double bpass[], int boundaryflag[]){
 		gsl_matrix_set(A,i,i,4);
 	
 		
-		if(i!=dim*dim-1){
+		if(i%dim != 0){
 			gsl_matrix_set(A,i,i+1,-1);
 		}
 
-		if(i!=0){
+		if(i%dim != 1){
 			gsl_matrix_set(A,i,i-1,-1);
 		}
 
