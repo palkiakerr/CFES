@@ -1,4 +1,4 @@
-#Change application name here(executable output name)
+#Change application name here(executable output name). This must always be updated
 TARGET=spin_button
 
 # compiler
