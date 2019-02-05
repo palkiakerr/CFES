@@ -2,7 +2,7 @@
 TARGET=projectx
 
 # compiler
-CC=gcc
+CC=g++
 # debug
 DEBUG=-g
 # optimisation
