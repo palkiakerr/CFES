@@ -61,9 +61,6 @@ int main(int argc, char *argv[])
             else if(distance < radius + 0.5 && filled==1){
                 map[i][j] = magnitude;
             }
-            else{
-                map[i][j]=0;
-            }
         }
     }
 
