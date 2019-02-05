@@ -1,0 +1,75 @@
+To do list   week starting 04/02/19
+
+Important
+
+- Write a C program to read in user values and store as arrays
+    -- should be written as a header file to utilise with the other program
+    -- will need to save values as variables/arrays 
+        --- the aim is to only read in/out at the start and end of the program instead of constantly doing it
+##CAMERON IS DOING THIS ONE##
+
+
+
+- add lines and points into the ASCII file matrix
+    -- work with Keir to get capability to input different kinds of charges beyond simple point charges
+##JACK IS DOING THIS ONE##
+
+
+
+- add flags
+    -- use radio buttons (tick box version?) in order to allow the user to select specific flags
+        --- options such as -graph and -heat should be included#
+    -- these should also be added to the log file
+    -- this should be included in the header file for the C++ program
+
+
+
+- Add a 'Run' button
+    -- this will initalise the C programs and start the solvers
+
+
+
+Nice Extras
+
+- add a way to name output files into the GUI
+    -- add a label and GTKEntry box to take in a user-inputted name
+    -- should the user not input a name, set the default to be matrix.txt (overwriting this filename is okay, tough luck to the user)
+
+
+
+- create a log file to store everything that the user does (inputs, buttons clicked etc)
+    -- include a timestamp along with the action that occurred
+    -- remove printing to the command line except in key instances (program starting/finishing/errors occurring)
+
+
+
+- explore how to include the final image (of the plot) into the interface
+    -- find out how to update/import the image into a GUI that is already running
+
+
+
+- add a popup to the Run button
+    -- this will inform the user that if they press the Run button again, the solver will initialise
+    -- this is to allow the user to make sure they don't have any extra data to add
+
+
+Really Nice Extras
+
+- add it to the Assistant
+    -- the assistant is prettier than having everything in a window container
+
+
+
+Below is pseudo for how the reading flags will work
+
+start
+read text
+if >/ combo is found
+    read in text following it
+end
+if </ is found
+    ignore text following it#
+end
+end
+
+>/heat>/graph>/cake
