@@ -1,13 +1,13 @@
-#include<cstdio>
-#include<cstdlib>
-#include <gsl/gsl_linalg.h>
-#include<string.h>
+#include<stdio.h>
+#include<stdlib.h>
+#include<gsl/gsl_linalg.h>
+#include<gsl/gsl_splinalg.h>
 ////////// Function Prototypes //////////
 
 int readboundary(double tgt[], char src[50], int boundaryflag[]);
 
-int solve_directmatrix(int dimension, double boundary[], int boundaryflag[]);
-int solve_jacobirelax(int dim, double bpass[], int boundaryflag[], int threshold);
+int solve(int dimension, double boundary[], int boundaryflag[]);
+int sparse_solve(int dimension, double boundary[], int boundaryflag[], int threshold);
 
 /////////////////////////////////////////
 
@@ -18,8 +18,10 @@ int main(int argc, char *argv[]){
 	// Basic inputs from arguments, matrix size and filename
 	int dimension;
 	char filename[50];
+	int maxiter;
 	sscanf(argv[1], "%d", &dimension);
 	sscanf(argv[2], "%s", filename);
+	sscanf(argv[3], "%d", &maxiter);
 
 
 
@@ -35,10 +37,8 @@ int main(int argc, char *argv[]){
 	readboundary(b, filename, boundaryflag);
 
 	// Passes the matrix system (Ax=b) to the solver
-	int threshold=70;
-	//solve_directmatrix(dimension, b, boundaryflag);
-	solve_jacobirelax(dimension, b, boundaryflag, threshold);
-
+	//solve(dimension, b, boundaryflag);
+	sparse_solve(dimension,b , boundaryflag, maxiter);
 
 	return 0;
 }
@@ -100,7 +100,7 @@ int readboundary(double b[], char src[50], int boundaryflag[]){
 }
 
 
-int solve_directmatrix(int dim, double bpass[], int boundaryflag[]){
+int solve(int dim, double bpass[], int boundaryflag[]){
 
 	// Create/Convert arrays into gsl matrix types
 	// Create coefficients array and turn it into a matrix
@@ -161,75 +161,71 @@ int solve_directmatrix(int dim, double bpass[], int boundaryflag[]){
     gsl_permutation_free (p);
     gsl_vector_free (x);
     return 0;
+ 
 }
 
 
-int solve_jacobirelax(int dim, double b[], int boundaryflag[], int threshold){
 
+int sparse_solve(int dim, double bpass[], int boundaryflag[], int threshold){
+
+	// Create/Convert arrays into gsl matrix types
 	// Create coefficients array and turn it into a matrix
-	int A[dim*dim][dim*dim];
+	gsl_spmatrix *A = gsl_spmatrix_alloc(dim*dim,dim*dim);
 
-	// Create empty "x" vectors
-	float x_0[dim*dim];
-	float x_1[dim*dim];
+	// Create b vector from passed array (boundary conditions)
+	gsl_vector_view b = gsl_vector_view_array(bpass, dim*dim);
+
+	// Create empty "x" vector
+	gsl_vector *x = gsl_vector_calloc(dim*dim);
 
 
 	// Now need to create the correct forms of the matrices to solve the problem
 	// as the current matrices are empty/garbage data. See p1029 of numerical
 	// recipies for what the matrix should look like (tri-diagonal with fringes)
-	for(int i = 0; i < dim*dim; i++){
+	for(int i = 0; i < (dim*dim); i++){
 
 		if(boundaryflag[i]==1){
-			A[i][i]=1;//Fails here in GDB i think
+			gsl_spmatrix_set(A,i,i,1);
 			continue;
 		}
 	
-		A[i][i]=4;
+		gsl_spmatrix_set(A,i,i,4);
 	
 		
 		if(i%dim != 0){
-			A[i][i+1]=-1;
+			gsl_spmatrix_set(A,i,i+1,-1);
 		}
 
 		if(i%dim != 1){
-			A[i][i-1]=-1;
+			gsl_spmatrix_set(A,i,i-1,-1);
 		}
 
 		if(i>=dim+1){
-			A[i][i-dim]=-1;
+			gsl_spmatrix_set(A,i,i-dim,-1);
 		}
 
 		if(i<=(dim*dim -dim-1)){
-			A[i][i+dim]=-1;
+			gsl_spmatrix_set(A,i,i+dim,-1);
 		}
 	}
 
 
-	//Main outer loop for each iteration of method
-	float sum;
-	for(int k = 0; k < threshold; k++){
 
 
-		// Calculate each new component of x
-		for(int x = 0; x < dim*dim; x++){
+	// Now solve the sparse linear system using iterativ methods
+	gsl_splinalg_itersolve *solv_space=gsl_splinalg_itersolve_alloc(gsl_splinalg_itersolve_gmres, dim*dim, dim*dim);
 
-			sum=0;
-			for(int j=0; j<dim*dim; j++){
-				if(j==x){continue;}
-				sum += x_0[j]*A[x][j];
-			}
+	gsl_splinalg_itersolve_iterate(A, &b.vector, 0, x, solv_space);
+	
+	gsl_splinalg_itersolve_free(solv_space);
+	gsl_vector_fprintf(stdout, x, "%g");
 
-			x_1[x] = (float)1/(A[x][x])*(b[x]-sum);
-
+	/*for(int county=0; county<dim;county++){
+		for(int countx=0;countx<dim;countx++){
+			printf("%d      %d      %g\n",countx+1,county+1,gsl_vector_get(x,county*dim +countx));
 		}
-
-		//4 bytes per c float
-		memcpy(x_0,x_1,4*dim*dim);
-
-	}
-
-
-	for(int k=0;k<dim*dim;k++){printf("%f",x_1[k]);}
-// Still segfaulting, the array A keeps segfaulting when acessing/assigning with it
+		
+	}*/
     return 0;
+ 
 }

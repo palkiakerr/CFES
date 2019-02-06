@@ -1,6 +1,7 @@
-#include<cstdio>
-#include<cstdlib>
-#include <gsl/gsl_linalg.h>
+#include<stdio.h>
+#include<stdlib.h>
+#include<gsl/gsl_linalg.h>
+#include<gsl_spmatrix.h>
 ////////// Function Prototypes //////////
 
 int readboundary(double tgt[], char src[50], int boundaryflag[]);
