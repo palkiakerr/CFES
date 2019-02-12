@@ -1,5 +1,6 @@
 #include<stdio.h>
 #include<stdlib.h>
+#include<string.h>
 #include<gsl/gsl_linalg.h>
 #include<gsl/gsl_splinalg.h>
 ////////// Function Prototypes //////////
@@ -8,6 +9,7 @@ int readboundary(double tgt[], char src[50], int boundaryflag[]);
 
 int solve(int dimension, double boundary[], int boundaryflag[]);
 int sparse_solve(int dimension, double boundary[], int boundaryflag[], int threshold);
+int jacobi(int dimension, double boundary[], int boundaryflag[], float tolerance);
 
 /////////////////////////////////////////
 
@@ -19,9 +21,10 @@ int main(int argc, char *argv[]){
 	int dimension;
 	char filename[50];
 	int maxiter;
+	float tolerance;
 	sscanf(argv[1], "%d", &dimension);
 	sscanf(argv[2], "%s", filename);
-	sscanf(argv[3], "%d", &maxiter);
+	sscanf(argv[3], "%f", &tolerance);
 
 
 
@@ -38,7 +41,8 @@ int main(int argc, char *argv[]){
 
 	// Passes the matrix system (Ax=b) to the solver
 	//solve(dimension, b, boundaryflag);
-	sparse_solve(dimension,b , boundaryflag, maxiter);
+	//sparse_solve(dimension,b , boundaryflag, maxiter);
+	jacobi(dimension,b , boundaryflag, tolerance);
 
 	return 0;
 }
@@ -228,4 +232,81 @@ int sparse_solve(int dim, double bpass[], int boundaryflag[], int threshold){
 	}*/
     return 0;
  
+}
+
+int jacobi(int dim, double b[], int boundaryflag[], float tolerance){
+	
+	// Initalist calcu9lation arrays
+	int boundary[dim][dim];
+	double x_1[dim][dim];
+	double x[dim][dim];
+	float err;
+
+	// Convert 1D to 2D
+	for(int i=0;i<dim;i++){
+		for(int j=0;j<dim;j++){
+			x[i][j]=b[i*dim+j];
+			boundary[i][j]=boundaryflag[i*dim+j];
+		}
+	}
+
+
+	// Jacobi Relaxation Method
+	for(int iters = 0; iters < 500000; iters++){
+		err = 0;
+
+		for(int i=0;i<dim;i++){
+			for(int j=0;j<dim;j++){
+
+				// Check for Boundary
+				if(boundary[i][j]==1){x_1[i][j]=x[i][j];continue;}
+
+				// Top Left
+				if(i==0 && j==0){x_1[i][j] = 0.5*(x[i+1][j]+x[i][j+1]);continue;}
+
+
+				// Bottom Right
+				if(i==dim-1 && j==dim-1){x_1[i-1][j] = 0.5*(x[i+1][j]+x[i][j-1]);continue;}
+
+
+				// Bottom Left
+				if(i==dim-1 && j==0){x_1[i][j] = 0.5*(x[i-1][j]+x[i][j+1]);continue;}
+
+				// Bottom Right
+				if(i==0 && j==dim-1){x_1[i+1][j] = 0.5*(x[i][j]+x[i][j-1]);continue;}
+
+
+				// Top Edge
+				if(i==0){x_1[i][j] = 0.333333333333*(x[i+1][j] + x[i][j-1] + x[i][j+1]);continue;}
+
+				// Bottom Edge
+				if(i==dim-1){x_1[i][j] = 0.333333333333*(x[i-1][j] + x[i][j-1] + x[i][j+1]);continue;}
+
+				// Left Edge
+				if(j==0){x_1[i][j] = 0.333333333333*(x[i+1][j] + x[i][j+1] + x[i-1][j]);continue;}
+
+
+				// Right Edge
+				if(i==dim-1){x_1[i][j] = 0.333333333333*(x[i+1][j] + x[i-1][j] + x[i][j-1]);continue;}
+
+
+				x_1[i][j] = 0.25*(x[i+1][j] + x[i-1][j] + x[i][j+1] + x[i][j-1]);
+
+				err += x_1[i][j] - x[i][j];
+			}
+		}
+
+		memcpy(x,x_1,dim*dim*8);
+
+		if(err < tolerance){break;}
+	}
+
+
+for(int i=0;i<dim;i++){
+		for(int j=0;j<dim;j++){
+			printf("%f\n",x[i][j]);
+		}
+		//printf("\n");
+	}
+
 }

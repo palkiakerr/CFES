@@ -3,8 +3,8 @@
 #include <stdlib.h>
 #include <math.h>
 #include <stdio.h>
-//#include <gsl/gsl_linalg.h>
-//#include <gsl/gsl_splinalg.h>
+#include <gsl/gsl_linalg.h>
+#include <gsl/gsl_splinalg.h>
 
 int type;
 int dimension;
@@ -28,6 +28,7 @@ typedef struct {
   GtkWidget *w_sbtn_user5;
   GtkWidget *w_tbtn_user;
   GtkWidget *w_btn_add_object;
+  GtkWidget *w_btn_generate;
 } app_widgets;
 
 int main(int argc, char *argv[])
@@ -62,6 +63,7 @@ int main(int argc, char *argv[])
     widgets->w_sbtn_user5 = GTK_WIDGET(gtk_builder_get_object(builder, "sbtn_user5"));
     widgets->w_tbtn_user = GTK_WIDGET(gtk_builder_get_object(builder, "tbtn_user"));
     widgets->w_btn_add_object = GTK_WIDGET(gtk_builder_get_object(builder, "btn_add_object"));
+    widgets->w_btn_generate = GTK_WIDGET(gtk_builder_get_object(builder, "btn_generate"));
 
     gtk_builder_connect_signals(builder, widgets);
  
@@ -182,16 +184,16 @@ void on_btn_add_object_clicked(GtkButton *button, app_widgets *app_wdgts) {
     radius = gtk_spin_button_get_value(GTK_SPIN_BUTTON(app_wdgts->w_sbtn_user3));
     magnitude = gtk_spin_button_get_value(GTK_SPIN_BUTTON(app_wdgts->w_sbtn_user5));
     printf("Circle entered with center (%d,%d), radius %f and magnitude %f\n",x1,y1,radius,magnitude);
-    for (i=0; i < dimension; i++) {
-      for (j=0; j < dimension; j++) {
-	double distance = sqrt((double)(i-y1)*(i-y1)+(j-x1)*(j-x1));
-	if (distance>radius-0.5 && distance<radius+0.5) {
-	      matrix[i][j]=magnitude;
-	    } else if (distance<radius+0.5 && filled) {
-	      matrix[i][j]=magnitude;
-	}
-      }
-    }	    
+     for (i=0; i < dimension; i++) { 
+       for (j=0; j < dimension; j++) { 
+     	double distance = sqrt((double)(i-y1)*(i-y1)+(j-x1)*(j-x1)); 
+     	if (distance>radius-0.5 && distance<radius+0.5) { 
+     	      matrix[i][j]=magnitude; 
+     	    } else if (distance<radius+0.5 && filled) { 
+     	      matrix[i][j]=magnitude; 
+     	} 
+       } 
+     } 	    
     break;
   }
 
@@ -216,24 +218,19 @@ void on_btn_matrix_clicked(GtkButton *button, app_widgets *app_wdgts) {
       matrix[i][j]=0;
     }
   }
-
-  //FILE *fp;
-  //fp=fopen("matrix.txt","w");
-
-  //float matrix[quantity][quantity];
-
-  //for (int i=0; i < quantity; i++) {
-  //for (int j=0; j < quantity; j++) {
-  //  matrix[i][j]=0;
-  //}
-  //}
-  
-  //for (int i = 0; i < quantity; i++) {
-  //for (int j = 0; j < quantity; j++) {
-  // fprintf(fp, "%.2f", matrix[i][j]);
-  //    }
-  //fprintf(fp,"\n");
-  //}
-  //fclose(fp);
 }
 
+void on_btn_generate_clicked (GtkButton *button, app_widgets *app_wdgts) {
+  
+  FILE *fp;
+  fp = fopen("matrix.txt","w");
+
+  for (int i=0; i < dimension; i++) {
+    for (int j=0; j < dimension; j++) {
+      fprintf(fp, "%.2f@", matrix[i][j]);
+    }
+    fprintf(fp,"\n");
+  }
+  fclose(fp);
+  printf("Matrix successfully outputted to matrix.txt!\n");
+}
