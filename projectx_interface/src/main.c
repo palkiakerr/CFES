@@ -1,7 +1,14 @@
 #include <gtk/gtk.h>
 #include <string.h>
+#include <stdlib.h>
+#include <math.h>
+#include <stdio.h>
+//#include <gsl/gsl_linalg.h>
+//#include <gsl/gsl_splinalg.h>
 
-int globe;
+int type;
+int dimension;
+float matrix[200][200];
 
 typedef struct {
   GtkWidget *w_comboboxtext_options;
@@ -21,12 +28,12 @@ typedef struct {
   GtkWidget *w_sbtn_user5;
   GtkWidget *w_tbtn_user;
   GtkWidget *w_btn_add_object;
+  GtkWidget *w_btn_generate;
 } app_widgets;
-
-void generate_matrix(int quantity);
 
 int main(int argc, char *argv[])
 {
+    
     GtkBuilder      *builder; 
     GtkWidget       *window;
     app_widgets     *widgets = g_slice_new(app_widgets);
@@ -56,6 +63,7 @@ int main(int argc, char *argv[])
     widgets->w_sbtn_user5 = GTK_WIDGET(gtk_builder_get_object(builder, "sbtn_user5"));
     widgets->w_tbtn_user = GTK_WIDGET(gtk_builder_get_object(builder, "tbtn_user"));
     widgets->w_btn_add_object = GTK_WIDGET(gtk_builder_get_object(builder, "btn_add_object"));
+    widgets->w_btn_generate = GTK_WIDGET(gtk_builder_get_object(builder, "btn_generate"));
 
     gtk_builder_connect_signals(builder, widgets);
  
@@ -127,20 +135,26 @@ void on_btn_show_option_clicked(GtkButton *button, app_widgets *app_wdgts) {
   } 
   //free up dynamically allocated memory
   g_free(item_text);
-  globe = object_type;
+  type = object_type;
 }
 
 void on_btn_add_object_clicked(GtkButton *button, app_widgets *app_wdgts) {
 
-  int x1,y1,length,height;
+  int x1,y1,length,height,i,j,filled;
   float radius,magnitude;
 
-  switch(globe) {
+  //fill determined from toggle button
+  filled=gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(app_wdgts->w_tbtn_user));
+  
+  // Variables stored from corresponding spin button entries
+  // Matrix values altered accordingly
+  switch(type) {
   case 1 : //Point
     x1 = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(app_wdgts->w_sbtn_user1));
     y1 = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(app_wdgts->w_sbtn_user2));
     magnitude = gtk_spin_button_get_value(GTK_SPIN_BUTTON(app_wdgts->w_sbtn_user5));
     printf("Point entered: (%d,%d) with magnitude %f\n",x1,y1,magnitude);
+    matrix[x1][y1]=magnitude;
     break;
   
   case 2 : //Rectangle
@@ -150,10 +164,17 @@ void on_btn_add_object_clicked(GtkButton *button, app_widgets *app_wdgts) {
     height = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(app_wdgts->w_sbtn_user4));
     magnitude = gtk_spin_button_get_value(GTK_SPIN_BUTTON(app_wdgts->w_sbtn_user5));
     printf("Rectangle entered from (%d,%d), with length %d, height %d and magnitude %f\n",x1,y1,length,height,magnitude);
-    if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(app_wdgts->w_tbtn_user))) {
-      printf("Rectangle is filled\n");
-	} else {
-      printf ("Rectangle is not filled\n");
+    for (i=x1; i < x1+length; i++) {
+      for (j=y1; j < y1+height; j++) {
+	if (i==x1 || i==x1+length-1 || j==y1 || j==y1+height-1) {
+	  matrix[i][j]=magnitude;
+	  //add if element is on rectangle boundary
+	}
+	if (filled) {
+	  matrix[i][j]=magnitude;
+	  //add if within boundary and is filled
+	}
+      }
     }
    break;
     
@@ -163,37 +184,53 @@ void on_btn_add_object_clicked(GtkButton *button, app_widgets *app_wdgts) {
     radius = gtk_spin_button_get_value(GTK_SPIN_BUTTON(app_wdgts->w_sbtn_user3));
     magnitude = gtk_spin_button_get_value(GTK_SPIN_BUTTON(app_wdgts->w_sbtn_user5));
     printf("Circle entered with center (%d,%d), radius %f and magnitude %f\n",x1,y1,radius,magnitude);
-     if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(app_wdgts->w_tbtn_user))) {
-      printf("Circle is filled\n");
-	} else {
-      printf ("Circle is not filled\n");
-    }
+    /* for (i=0; i < dimension; i++) { */
+    /*   for (j=0; j < dimension; j++) { */
+    /* 	double distance = sqrt((double)(i-y1)*(i-y1)+(j-x1)*(j-x1)); */
+    /* 	if (distance>radius-0.5 && distance<radius+0.5) { */
+    /* 	      matrix[i][j]=magnitude; */
+    /* 	    } else if (distance<radius+0.5 && filled) { */
+    /* 	      matrix[i][j]=magnitude; */
+    /* 	} */
+    /*   } */
+    /* } */	    
     break;
+  }
+
+  for (int i=0; i < dimension; i++) {
+    for (int j=0; j < dimension; j++) {
+      printf("%.2f ", matrix[i][j]);
+    }
+    printf("\n");
   }
 }
 
 //Takes dimension of matrix and produces square matrix on text file
 void on_btn_matrix_clicked(GtkButton *button, app_widgets *app_wdgts) {
 
-   guint32 quantity = 0; //stores integer read from spin button widget
-
-  quantity = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(app_wdgts->w_sbtn_quantity));
-  generate_matrix(quantity);
-  printf("Matrx dimension is %d\n", quantity);
-
+  //stores integer read from spin button widget
+  dimension= gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(app_wdgts->w_sbtn_quantity));
+  
+  //outputs dimension and initialises matrix elements
+  printf("Matrx dimension is %d\n", dimension);
+  for (int i=0; i < dimension; i++) {
+    for (int j=0; j < dimension; j++) {
+      matrix[i][j]=0;
+    }
+  }
 }
 
-void generate_matrix(int quantity) {
-
-  FILE *fp;
-  fp=fopen("matrix.txt","w");
+void on_btn_generate_clicked (GtkButton *button, app_widgets *app_wdgts) {
   
-  for (int i = 0; i < quantity; i++) {
-    for (int j = 0; j < quantity; j++) {
+  FILE *fp;
+  fp = fopen("matrix.txt","w");
 
-	fprintf(fp, "0");
-      }
-	fprintf(fp,"\n");
+  for (int i=0; i < dimension; i++) {
+    for (int j=0; j < dimension; j++) {
+      fprintf(fp, "%.2f@", matrix[i][j]);
+    }
+    fprintf(fp,"\n");
   }
   fclose(fp);
+  printf("Matrix successfully outputted to matrix.txt!\n");
 }
