@@ -3,8 +3,8 @@
 #include <stdlib.h>
 #include <math.h>
 #include <stdio.h>
-//#include <gsl/gsl_linalg.h>
-//#include <gsl/gsl_splinalg.h>
+#include <gsl/gsl_linalg.h>
+#include <gsl/gsl_splinalg.h>
 
 int type;
 int dimension;
@@ -184,16 +184,16 @@ void on_btn_add_object_clicked(GtkButton *button, app_widgets *app_wdgts) {
     radius = gtk_spin_button_get_value(GTK_SPIN_BUTTON(app_wdgts->w_sbtn_user3));
     magnitude = gtk_spin_button_get_value(GTK_SPIN_BUTTON(app_wdgts->w_sbtn_user5));
     printf("Circle entered with center (%d,%d), radius %f and magnitude %f\n",x1,y1,radius,magnitude);
-    /* for (i=0; i < dimension; i++) { */
-    /*   for (j=0; j < dimension; j++) { */
-    /* 	double distance = sqrt((double)(i-y1)*(i-y1)+(j-x1)*(j-x1)); */
-    /* 	if (distance>radius-0.5 && distance<radius+0.5) { */
-    /* 	      matrix[i][j]=magnitude; */
-    /* 	    } else if (distance<radius+0.5 && filled) { */
-    /* 	      matrix[i][j]=magnitude; */
-    /* 	} */
-    /*   } */
-    /* } */	    
+     for (i=0; i < dimension; i++) { 
+       for (j=0; j < dimension; j++) { 
+     	double distance = sqrt((double)(i-y1)*(i-y1)+(j-x1)*(j-x1)); 
+     	if (distance>radius-0.5 && distance<radius+0.5) { 
+     	      matrix[i][j]=magnitude; 
+     	    } else if (distance<radius+0.5 && filled) { 
+     	      matrix[i][j]=magnitude; 
+     	} 
+       } 
+     } 	    
     break;
   }
 
