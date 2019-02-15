@@ -214,7 +214,7 @@ void on_btn_matrix_clicked(GtkButton *button, app_widgets *app_wdgts) {
   printf("Matrix dimension is %d\n", dimension);
     for (int i=0; i < dimension; i++) {
       for (int j=0; j < dimension; j++) {
-	matrix[i][j]=0.000001; //100000 denotes unknown value (outwith acceptable potential range)
+	matrix[i][j]=0.000001; //0.000001 denotes unknown value (outwith acceptable potential range)
       }
    }
     f=fopen("log.txt","w");
@@ -241,7 +241,7 @@ void on_btn_generate_clicked (GtkButton *button, app_widgets *app_wdgts) {
   fclose(f);
 
   printf("Passing Matrix to calculation handler\n");
-  calc_handle(dimension, 0.001);// Take tolerance from a button soon
+  calc_handle(dimension, 0.00001);// Take tolerance from a button soon
 }
 
 
@@ -260,8 +260,8 @@ int calc_handle(int dimension, float tolerance){
 
   // Passes the matrix system (Ax=b) to the solver
   //solve(dimension, b, boundaryflag);
-  //sparse_solve(dimension,b , boundaryflag, maxiter);
-  jacobi(dimension,b , boundaryflag, tolerance);
+  //sparse_solve(dimension,b , boundaryflag, 2);
+  jacobi(dimension,b ,boundaryflag, tolerance);
 
   return 0;
 }
@@ -285,32 +285,25 @@ int readboundary(double b[], int boundaryflag[], int dim){
 
     // Read the file's characters into the tgt array, skipping newlines
     // tgt size must be sufficient (defined outsie this function)
-    float c;
-    int count = 0;
+    
     
 
-    for(int i = 0; i<dim; i++){
-
+    for(int i = 0; i<dim*dim; i++){
+      float c;
       fscanf(fp,"%f", &c);
-      
-      // Ignore newlines and stop ant the end of the file
-      if(i==dim-1){break;}
-      //if(c=='\n'){continue;}
 
       // Remember which zeros and numbers are boundary conditions using a second vector
       // called boundaryflag
       if(c==0.000001){
-        b[count]=0;
-        boundaryflag[count]=0;
+        b[i]=0;
+        boundaryflag[i]=0;
       }
 
       // Shift ASCII table to turn che character for a number into the number itself
       else{
-        b[count] = c;
-        boundaryflag[count] = 1;
+        b[i] = c;
+        boundaryflag[i] = 1;
       }
-
-      count++;
 
     }
 
@@ -470,7 +463,7 @@ int jacobi(int dim, double b[], int boundaryflag[], float tolerance){
 
 
   // Jacobi Relaxation Method
-  for(int iters = 0; iters < 500000; iters++){
+  for(int iters = 0; iters < 50000; iters++){
     err = 0;
 
     for(int i=0;i<dim;i++){
@@ -510,21 +503,23 @@ int jacobi(int dim, double b[], int boundaryflag[], float tolerance){
 
         x_1[i][j] = 0.25*(x[i+1][j] + x[i-1][j] + x[i][j+1] + x[i][j-1]);
 
-        err += x_1[i][j] - x[i][j];
+        //err += x_1[i][j] - x[i][j];
       }
     }
 
     memcpy(x,x_1,dim*dim*8);
 
-    if(err < tolerance){break;}
+    //if(err < tolerance){break;}
   }
 
 
 for(int i=0;i<dim;i++){
     for(int j=0;j<dim;j++){
-      printf("%f\n",x[i][j]);
+      printf("%f\n",x_1[i][j]);
     }
     //printf("\n");
   }
+
+  
 
 }
