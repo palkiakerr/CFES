@@ -5,10 +5,14 @@
 #include <stdio.h>
 #include <gsl/gsl_linalg.h>
 #include <gsl/gsl_splinalg.h>
-
+///////////////////////////////////////
+// Compile me with
+// gcc -lgsl -lgslcblas `pkg-config --cflags --libs gtk+-3.0` -lm -O2 -export-dynamic combined.c -o CFES
+//
+///////////////////////////////////////
 int type;
 int dimension;
-float matrix[200][200];
+float matrix[500][500];
 FILE *f;
 
 int readboundary(double tgt[], int boundaryflag[], int dim);
@@ -241,7 +245,7 @@ void on_btn_generate_clicked (GtkButton *button, app_widgets *app_wdgts) {
   fclose(f);
 
   printf("Passing Matrix to calculation handler\n");
-  calc_handle(dimension, 0.00001);// Take tolerance from a button soon
+  calc_handle(dimension, 0.0001);// Take tolerance from a button soon
 }
 
 
@@ -262,6 +266,12 @@ int calc_handle(int dimension, float tolerance){
   //solve(dimension, b, boundaryflag);
   //sparse_solve(dimension,b , boundaryflag, 2);
   jacobi(dimension,b ,boundaryflag, tolerance);
+
+  system("python E_field.py");
+  system("python P_field.py");
+
+
+  exit(0);
 
   return 0;
 }
@@ -290,11 +300,11 @@ int readboundary(double b[], int boundaryflag[], int dim){
 
     for(int i = 0; i<dim*dim; i++){
       float c;
-      fscanf(fp,"%f", &c);
+      fscanf(fp,"%f ", &c);
 
       // Remember which zeros and numbers are boundary conditions using a second vector
       // called boundaryflag
-      if(c==0.000001){
+      if(c<0.01){
         b[i]=0;
         boundaryflag[i]=0;
       }
@@ -365,17 +375,19 @@ int solve(int dim, double bpass[], int boundaryflag[]){
   // direct matrix method)
   int s;
 
-    gsl_permutation * p = gsl_permutation_alloc (dim*dim);
+  gsl_permutation * p = gsl_permutation_alloc (dim*dim);
 
-    gsl_linalg_LU_decomp (A, p, &s);
+  gsl_linalg_LU_decomp (A, p, &s);
+  gsl_linalg_LU_solve (A, p, &b.vector, x);
 
-    gsl_linalg_LU_solve (A, p, &b.vector, x);
+  FILE *fp;
+  fp = fopen("output.txt", "w");
+  gsl_vector_fprintf (fp, x, "%g");
+  fclose(fp);
 
-    gsl_vector_fprintf (stdout, x, "%g");
-
-    gsl_permutation_free (p);
-    gsl_vector_free (x);
-    return 0;
+  gsl_permutation_free (p);
+  gsl_vector_free (x);
+  return 0;
  
 }
 
@@ -463,7 +475,7 @@ int jacobi(int dim, double b[], int boundaryflag[], float tolerance){
 
 
   // Jacobi Relaxation Method
-  for(int iters = 0; iters < 50000; iters++){
+  for(int iters = 0; iters < 10000000000; iters++){
     err = 0;
 
     for(int i=0;i<dim;i++){
@@ -503,22 +515,27 @@ int jacobi(int dim, double b[], int boundaryflag[], float tolerance){
 
         x_1[i][j] = 0.25*(x[i+1][j] + x[i-1][j] + x[i][j+1] + x[i][j-1]);
 
-        //err += x_1[i][j] - x[i][j];
+        err += x_1[i][j] - x[i][j];
       }
     }
 
     memcpy(x,x_1,dim*dim*8);
-
-    //if(err < tolerance){break;}
+    err = err/(dim*dim);
+    if(err < tolerance){break;}
   }
 
+  FILE *fp;
+  fp = fopen("output.txt", "w");
+
+  
 
 for(int i=0;i<dim;i++){
     for(int j=0;j<dim;j++){
-      printf("%f\n",x_1[i][j]);
+      fprintf(fp,"%f\n",x_1[i][j]);
     }
     //printf("\n");
   }
+  fclose(fp);
 
   
 
