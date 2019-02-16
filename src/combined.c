@@ -5,6 +5,11 @@
 #include <stdio.h>
 #include <gsl/gsl_linalg.h>
 #include <gsl/gsl_splinalg.h>
+///////////////////////////////////////
+// Compile me with
+// gcc -lgsl -lgslcblas `pkg-config --cflags --libs gtk+-3.0` -lm -O2 -export-dynamic combined.c -o CFES
+//
+///////////////////////////////////////
 int type;
 int dimension;
 float matrix[500][500];
