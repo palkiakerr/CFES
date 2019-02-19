@@ -233,7 +233,7 @@ void on_btn_matrix_clicked(GtkButton *button, app_widgets *app_wdgts) {
   dimension = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(app_wdgts->w_sbtn_quantity));
   
   //outputs dimension and initialises matrix elements
-  printf("Matrix dimension is %d\n", dimension);
+  //printf("Matrix dimension is %d\n", dimension);
     for (int i=0; i < dimension; i++) {
       for (int j=0; j < dimension; j++) {
 	matrix[i][j]=0.000001; //0.000001 denotes unknown value (outwith acceptable potential range)
@@ -259,7 +259,7 @@ void on_btn_generate_clicked (GtkButton *button, app_widgets *app_wdgts) {
   }
   fclose(fp);
   printf("Matrix successfully outputted to matrix.txt!\n");
-  fprintf(f,"Matrix successfully outputted to matrix.txt!\n");
+   fprintf(f,"Matrix successfully outputted to matrix.txt!\n");
   fclose(f);
 
   printf("Passing Matrix to calculation handler\n");
