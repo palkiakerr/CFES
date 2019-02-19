@@ -62,7 +62,7 @@
               <object class="GtkLabel" id="text_readme">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">README
+                <property name="label" translatable="yes">Classical Field Equation Solver
 
 Please follow the instructions below first.
 
