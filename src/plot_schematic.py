@@ -8,7 +8,7 @@ data = np.loadtxt(fname)
 print(len(data))
 N = int(np.sqrt(len(data))) 
 V = np.reshape(data, (N,N)) #reshape the data
-V[V < 0.000002] = 0
+V[abs(V) < 0.000002 ] = 0
 
 plt.imshow(V, cmap='Greys')
 plt.savefig('schematic.png', bbox_inches='tight')
