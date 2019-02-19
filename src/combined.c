@@ -322,7 +322,7 @@ int readboundary(double b[], int boundaryflag[], int dim){
 
       // Remember which zeros and numbers are boundary conditions using a second vector
       // called boundaryflag
-      if(c<0.01){
+      if(c<0.01 && >0){
         b[i]=0;
         boundaryflag[i]=0;
       }
