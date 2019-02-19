@@ -35,9 +35,9 @@
   </object>
   <object class="GtkWindow" id="window_main">
     <property name="can_focus">False</property>
-    <property name="title" translatable="yes">Project X</property>
-    <property name="default_width">640</property>
-    <property name="default_height">480</property>
+    <property name="title" translatable="yes">Classical Field Equation Solver (CFES)</property>
+    <property name="default_width">900</property>
+    <property name="default_height">350</property>
     <signal name="destroy" handler="on_window_main_destroy" swapped="no"/>
     <child>
       <placeholder/>
@@ -50,7 +50,7 @@
         <property name="margin_right">3</property>
         <property name="margin_top">3</property>
         <property name="margin_bottom">3</property>
-        <property name="spacing">7</property>
+        <property name="spacing">20</property>
         <property name="homogeneous">True</property>
         <child>
           <object class="GtkBox" id="image_schematic">
@@ -67,14 +67,24 @@
 Please follow the instructions below first.
 
     • The first entry determines the dimension of the matrix. Enter the desired dimension then click “Generate matrix”. As indicated on the button, this will overwrite the existing matrix, so only do this if a new system is being entered.
+
     • The second button determines the type of object being added. Please select one of the object types from the drop down button and click “Select option”. This will prompt the user for the relevant entries
     • Add the relevant entries and click “Add object”
+
     • Repeat the two previous steps as many times as is necessary
+
     • Finally, click the “Generate Output!” button. This will open two pop-up windows showing the Electric Field and the Potential of the system defined by the user. 
+
+    •Finally, to reset everything including any generated images, close this window and type 'make clean' into the terminal
 
 
 	Enjoy =)</property>
                 <property name="wrap">True</property>
+                <property name="xalign">1</property>
+                <attributes>
+                  <attribute name="font-desc" value="Monospace 10"/>
+                  <attribute name="style" value="normal"/>
+                </attributes>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -98,7 +108,8 @@ Please follow the instructions below first.
               <object class="GtkBox">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="margin_bottom">20</property>
+                <property name="margin_top">5</property>
+                <property name="margin_bottom">10</property>
                 <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkBox">
@@ -216,6 +227,7 @@ Please follow the instructions below first.
                   <object class="GtkBox">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="margin_top">5</property>
                     <property name="homogeneous">True</property>
                     <child>
                       <object class="GtkLabel">
@@ -252,6 +264,7 @@ Please follow the instructions below first.
                   <object class="GtkBox">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="margin_top">5</property>
                     <property name="homogeneous">True</property>
                     <child>
                       <object class="GtkLabel" id="lbl_user1">
@@ -292,6 +305,7 @@ Please follow the instructions below first.
                   <object class="GtkBox">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="margin_top">5</property>
                     <property name="homogeneous">True</property>
                     <child>
                       <object class="GtkLabel" id="lbl_user2">
@@ -332,6 +346,7 @@ Please follow the instructions below first.
                   <object class="GtkBox">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="margin_top">5</property>
                     <property name="homogeneous">True</property>
                     <child>
                       <object class="GtkLabel" id="lbl_user3">
@@ -372,6 +387,7 @@ Please follow the instructions below first.
                   <object class="GtkBox">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="margin_top">5</property>
                     <property name="homogeneous">True</property>
                     <child>
                       <object class="GtkLabel" id="lbl_user4">
@@ -412,6 +428,7 @@ Please follow the instructions below first.
                   <object class="GtkBox">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="margin_top">5</property>
                     <property name="homogeneous">True</property>
                     <child>
                       <object class="GtkLabel" id="lbl_user5">
@@ -454,6 +471,7 @@ Please follow the instructions below first.
                   <object class="GtkBox">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="margin_top">5</property>
                     <property name="homogeneous">True</property>
                     <child>
                       <object class="GtkLabel" id="lbl_user6">
@@ -493,6 +511,7 @@ Please follow the instructions below first.
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <property name="margin_top">5</property>
                     <signal name="clicked" handler="on_btn_add_object_clicked" swapped="no"/>
                   </object>
                   <packing>
@@ -507,6 +526,7 @@ Please follow the instructions below first.
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <property name="margin_bottom">5</property>
                     <signal name="clicked" handler="on_btn_generate_clicked" swapped="no"/>
                   </object>
                   <packing>
