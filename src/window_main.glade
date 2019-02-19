@@ -446,7 +446,7 @@ Please follow the instructions below first.
                       <object class="GtkSpinButton" id="sbtn_user5">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="max_length">5</property>
+                        <property name="max_length">6</property>
                         <property name="width_chars">10</property>
                         <property name="max_width_chars">10</property>
                         <property name="adjustment">adjustment5</property>
