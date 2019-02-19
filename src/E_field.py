@@ -36,7 +36,7 @@ X, Y = np. meshgrid (x,y)
 
 
 plt.clf()
-fig =plt.quiver(X, Y, 1.25*E_x/E_norm, 1.25*E_y/E_norm, E_norm, cmap='gist_rainbow', clim=[0,1], scale=40)
+fig =plt.quiver(X, Y, 1.25*E_x/E_norm, 1.25*E_y/E_norm, E_norm, cmap='gist_rainbow', clim=[0,1], scale=100, headwidth=1)
 cb = plt.colorbar(fig)
 plt. title ('Electric field')
 plt.show()
