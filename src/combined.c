@@ -156,7 +156,7 @@ void on_btn_add_object_clicked(GtkButton *button, app_widgets *app_wdgts) {
   switch(type) {
   case 1 : //Point
     //printf("Point entered: (%d,%d) with magnitude %f\n",x1,y1,magnitude);
-    fprintf(f,"Point entered: (%d,%d) with magnitude %f\n",x1,y1,magnitude);
+    //fprintf(f,"Point entered: (%d,%d) with magnitude %f\n",x1,y1,magnitude);
     matrix[x1][y1]=magnitude;
     break;
   
@@ -164,7 +164,7 @@ void on_btn_add_object_clicked(GtkButton *button, app_widgets *app_wdgts) {
     length = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(app_wdgts->w_sbtn_user3));
     height = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(app_wdgts->w_sbtn_user4));
     //printf("Rectangle entered from (%d,%d), with length %d, height %d and magnitude %f\n",x1,y1,length,height,magnitude);
-    fprintf(f,"Rectangle entered from (%d,%d), with length %d, height %d and magnitude %f\n",x1,y1,length,height,magnitude);
+    //fprintf(f,"Rectangle entered from (%d,%d), with length %d, height %d and magnitude %f\n",x1,y1,length,height,magnitude);
     for (i=x1; i < x1+length; i++) {
       for (j=y1; j < y1+height; j++) {
 	if (i==x1 || i==x1+length-1 || j==y1 || j==y1+height-1) {
@@ -182,7 +182,7 @@ void on_btn_add_object_clicked(GtkButton *button, app_widgets *app_wdgts) {
   case 3 : //Circle
     radius = gtk_spin_button_get_value(GTK_SPIN_BUTTON(app_wdgts->w_sbtn_user3));
     //printf("Circle entered with center (%d,%d), radius %f and magnitude %f\n",x1,y1,radius,magnitude);
-    fprintf(f,"Circle entered with center (%d,%d), radius %f and magnitude %f\n",x1,y1,radius,magnitude);
+    //fprintf(f,"Circle entered with center (%d,%d), radius %f and magnitude %f\n",x1,y1,radius,magnitude);
  
      for (i=0; i < dimension; i++) { 
        for (j=0; j < dimension; j++) { 
@@ -554,7 +554,4 @@ for(int i=0;i<dim;i++){
     //printf("\n");
   }
   fclose(fp);
-
-  
-
 }

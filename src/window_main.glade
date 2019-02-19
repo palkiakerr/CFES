@@ -53,19 +53,28 @@
         <property name="spacing">7</property>
         <property name="homogeneous">True</property>
         <child>
-          <object class="GtkBox">
+          <object class="GtkBox" id="image_schematic">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="orientation">vertical</property>
             <property name="homogeneous">True</property>
             <child>
-              <object class="GtkBox" id="image_schematic">
+              <object class="GtkLabel" id="text_readme">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="orientation">vertical</property>
-                <child>
-                  <placeholder/>
-                </child>
+                <property name="label" translatable="yes">README
+
+Please follow the instructions below first.
+
+    • The first entry determines the dimension of the matrix. Enter the desired dimension then click “Generate matrix”. As indicated on the button, this will overwrite the existing matrix, so only do this if a new system is being entered.
+    • The second button determines the type of object being added. Please select one of the object types from the drop down button and click “Select option”. This will prompt the user for the relevant entries
+    • Add the relevant entries and click “Add object”
+    • Repeat the two previous steps as many times as is necessary
+    • Finally, click the “Generate Output!” button. This will open two pop-up windows showing the Electric Field and the Potential of the system defined by the user. 
+
+
+	Enjoy =)</property>
+                <property name="wrap">True</property>
               </object>
               <packing>
                 <property name="expand">False</property>
