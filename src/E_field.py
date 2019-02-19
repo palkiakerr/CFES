@@ -29,6 +29,7 @@ for i in range (1, dim-1):
         E_norm[i,j] = np.sqrt(E_x[i,j]**2 + E_y[i,j]**2)
 
 
+
 x = np. linspace (0,dim,dim)
 y = np. linspace (0,dim,dim)
 X, Y = np. meshgrid (x,y)
@@ -36,7 +37,7 @@ X, Y = np. meshgrid (x,y)
 
 
 plt.clf()
-fig =plt.quiver(X, Y, 1.25*E_x/E_norm, 1.25*E_y/E_norm, E_norm, cmap='gist_rainbow', clim=[0,1], scale=100, headwidth=1)
+fig =plt.quiver(X, Y, 1.25*E_x/E_norm, 1.25*E_y/E_norm, E_norm, cmap='binary', clim=[0,np.amax(E_norm)], scale=80, headwidth=1)
 cb = plt.colorbar(fig)
 plt. title ('Electric field')
 plt.show()
