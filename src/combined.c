@@ -211,7 +211,7 @@ void on_btn_add_object_clicked(GtkButton *button, app_widgets *app_wdgts) {
     fprintf(f," ");
   }
 fclose(f);
-system("python plot_schematic.py");
+system("python plot_schematic.py > /dev/null");
  
 //Update the image
  GList *children, *iter;
@@ -285,8 +285,8 @@ int calc_handle(int dimension, float tolerance){
   //sparse_solve(dimension,b , boundaryflag, 2);
   jacobi(dimension,b ,boundaryflag, tolerance);
 
-  system("python E_field.py");
-  system("python P_field.py");
+  system("python E_field.py > /dev/null");
+  system("python P_field.py > /dev/null");
 
 
   exit(0);
