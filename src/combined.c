@@ -40,6 +40,7 @@ typedef struct {
   GtkWidget *w_tbtn_user;
   GtkWidget *w_btn_add_object;
   GtkWidget *w_btn_generate;
+  GtkWidget *w_image_schematic;
 } app_widgets;
 
 int main(int argc, char *argv[])
@@ -74,6 +75,7 @@ int main(int argc, char *argv[])
     widgets->w_tbtn_user = GTK_WIDGET(gtk_builder_get_object(builder, "tbtn_user"));
     widgets->w_btn_add_object = GTK_WIDGET(gtk_builder_get_object(builder, "btn_add_object"));
     widgets->w_btn_generate = GTK_WIDGET(gtk_builder_get_object(builder, "btn_generate"));
+    widgets->w_image_schematic = GTK_WIDGET(gtk_builder_get_object(builder, "image_schematic"));
 
     //connect builder and signals
     gtk_builder_connect_signals(builder, widgets);
@@ -114,7 +116,7 @@ void on_btn_show_option_clicked(GtkButton *button, app_widgets *app_wdgts) {
   //Requirements for every type of entry
    gtk_label_set_text(GTK_LABEL(app_wdgts->w_lbl_user1), "Enter x-coordinate:");
    gtk_label_set_text(GTK_LABEL(app_wdgts->w_lbl_user2), "Enter y-coordinate:");
-   gtk_label_set_text(GTK_LABEL(app_wdgts->w_lbl_user5), "Enter magnitude of circle (<100,000):");
+   gtk_label_set_text(GTK_LABEL(app_wdgts->w_lbl_user5), "Enter magnitude (<100,000):");
   
   //Requests the user for inputs corresponding to object types
   switch(object_type) {
@@ -153,16 +155,16 @@ void on_btn_add_object_clicked(GtkButton *button, app_widgets *app_wdgts) {
   // Matrix values altered according to type of shape
   switch(type) {
   case 1 : //Point
-    printf("Point entered: (%d,%d) with magnitude %f\n",x1,y1,magnitude);
-    //fprintf(f,"Point entered: (%d,%d) with magnitude %f\n",x1,y1,magnitude);
+    //printf("Point entered: (%d,%d) with magnitude %f\n",x1,y1,magnitude);
+    fprintf(f,"Point entered: (%d,%d) with magnitude %f\n",x1,y1,magnitude);
     matrix[x1][y1]=magnitude;
     break;
   
   case 2 : //Rectangle
     length = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(app_wdgts->w_sbtn_user3));
     height = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(app_wdgts->w_sbtn_user4));
-    printf("Rectangle entered from (%d,%d), with length %d, height %d and magnitude %f\n",x1,y1,length,height,magnitude);
-    //fprintf(f,"Rectangle entered from (%d,%d), with length %d, height %d and magnitude %f\n",x1,y1,length,height,magnitude);
+    //printf("Rectangle entered from (%d,%d), with length %d, height %d and magnitude %f\n",x1,y1,length,height,magnitude);
+    fprintf(f,"Rectangle entered from (%d,%d), with length %d, height %d and magnitude %f\n",x1,y1,length,height,magnitude);
     for (i=x1; i < x1+length; i++) {
       for (j=y1; j < y1+height; j++) {
 	if (i==x1 || i==x1+length-1 || j==y1 || j==y1+height-1) {
@@ -179,8 +181,8 @@ void on_btn_add_object_clicked(GtkButton *button, app_widgets *app_wdgts) {
     
   case 3 : //Circle
     radius = gtk_spin_button_get_value(GTK_SPIN_BUTTON(app_wdgts->w_sbtn_user3));
-    printf("Circle entered with center (%d,%d), radius %f and magnitude %f\n",x1,y1,radius,magnitude);
-    //fprintf(f,"Circle entered with center (%d,%d), radius %f and magnitude %f\n",x1,y1,radius,magnitude);
+    //printf("Circle entered with center (%d,%d), radius %f and magnitude %f\n",x1,y1,radius,magnitude);
+    fprintf(f,"Circle entered with center (%d,%d), radius %f and magnitude %f\n",x1,y1,radius,magnitude);
  
      for (i=0; i < dimension; i++) { 
        for (j=0; j < dimension; j++) { 
@@ -198,22 +200,30 @@ void on_btn_add_object_clicked(GtkButton *button, app_widgets *app_wdgts) {
   for (int i=0; i < dimension; i++) {
     for (int j=0; j < dimension; j++) {
       if (matrix[i][j]==0.000001) {
-	printf("0.000001 "); fprintf(f,"0.000001");
+	//printf("0.000001 ");
+	fprintf(f,"0.000001");
       } else {
-	printf("%f ", matrix[i][j]); fprintf(f,"%f ", matrix[i][j]);
+	//printf("%f ", matrix[i][j]);
+	fprintf(f,"%f ", matrix[i][j]);
       }
     }
-    printf("\n"); fprintf(f," ");
+    //printf("\n");
+    fprintf(f," ");
   }
 fclose(f);
 system("python plot_schematic.py");
-//UPDATE IMGBOX
-/////////////////////////////////////////////////////
-//
-// Jack can you please refresh the imagebox here
-//
-/////////////////////////////////////////////////////
-
+ 
+//Update the image
+ GList *children, *iter;
+ children = gtk_container_get_children(GTK_CONTAINER(app_wdgts->w_image_schematic));
+ for (iter = children; iter != NULL; iter = g_list_next(iter)){
+   gtk_widget_destroy(GTK_WIDGET(iter->data));
+  }
+					 				       
+ GtkWidget *image = gtk_image_new_from_file("schematic.png");
+ gtk_container_add(GTK_CONTAINER(app_wdgts->w_image_schematic),image);
+ gtk_widget_show(image);
+ 
 }
 
 //Takes dimension of matrix and produces square matrix on text file

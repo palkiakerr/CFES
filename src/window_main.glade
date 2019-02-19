@@ -59,10 +59,13 @@
             <property name="orientation">vertical</property>
             <property name="homogeneous">True</property>
             <child>
-              <object class="GtkImage" id="image_template">
+              <object class="GtkBox" id="image_schematic">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="pixbuf">schematic.jpg</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <placeholder/>
+                </child>
               </object>
               <packing>
                 <property name="expand">False</property>
