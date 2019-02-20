@@ -57,13 +57,17 @@ CB = plt. colorbar (CS , shrink =0.8 , extend ='both')
 plt.subplot(2,2,1)
 #fig =plt.quiver(X, Y, 1.25*E_x/E_norm, 1.25*E_y/E_norm, E_norm, cmap='binary', clim=[0,np.amax(E_norm)], scale=80, headwidth=1)
 
-#Comment in for binary colours
+#Comment in for binary colours int(round(dim/33.33)
+h=int(round(dim/35))
+
+skip = (slice(None, None, h), slice(None, None, h))
 
 
-fig =plt.quiver(X, Y, E_x/E_norm, E_y/E_norm, E_norm, cmap='rainbow', clim=[0,np.amax(E_norm)], scale=60, headwidth=2)
+fig =plt.quiver(X[skip], Y[skip], E_x[skip]/E_norm[skip], E_y[skip]/E_norm[skip], E_norm[skip], cmap='gist_rainbow', clim=[0,np.amax(E_norm)], scale=30, headwidth=5)
 cb = plt.colorbar(fig)
 plt. title ('Electric field')
 plt.suptitle("Insert catchy title here")
 plt.show()
 #may wish to scale arrows between 0 and 1
 #Also dividing by 0 warning
+
