@@ -153,7 +153,7 @@ void on_btn_add_object_clicked(GtkButton *button, app_widgets *app_wdgts) {
   case 1 : //Point
     //printf("Point entered: (%d,%d) with magnitude %f\n",x1,y1,magnitude);
     //fprintf(f,"Point entered: (%d,%d) with magnitude %f\n",x1,y1,magnitude);
-    matrix[x1][y1]=magnitude;
+    matrix[y1][x1]=magnitude;
     break;
   
   case 2 : //Rectangle
@@ -164,11 +164,11 @@ void on_btn_add_object_clicked(GtkButton *button, app_widgets *app_wdgts) {
     for (i=x1; i < x1+length; i++) {
       for (j=y1; j < y1+height; j++) {
 	if (i==x1 || i==x1+length-1 || j==y1 || j==y1+height-1) {
-	  matrix[i][j]=magnitude;
+	  matrix[j][i]=magnitude;
 	  //add if element is on rectangle boundary
 	}
 	if (filled) {
-	  matrix[i][j]=magnitude;
+	  matrix[j][i]=magnitude;
 	  //add if within boundary and is filled
 	}
       }
