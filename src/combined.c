@@ -110,23 +110,28 @@ void on_btn_show_option_clicked(GtkButton *button, app_widgets *app_wdgts) {
   if (strcmp(item_text, "Circle") == 0) {object_type=3;}
 
   //Requirements for every type of entry
-   gtk_label_set_text(GTK_LABEL(app_wdgts->w_lbl_user1), "Enter x-coordinate:");
-   gtk_label_set_text(GTK_LABEL(app_wdgts->w_lbl_user2), "Enter y-coordinate:");
+
    gtk_label_set_text(GTK_LABEL(app_wdgts->w_lbl_user5), "Enter magnitude (<100,000):");
   
   //Requests the user for inputs corresponding to object types
   switch(object_type) {
   case 1 ://Point
+   gtk_label_set_text(GTK_LABEL(app_wdgts->w_lbl_user1), "Enter x-coordinate:");
+   gtk_label_set_text(GTK_LABEL(app_wdgts->w_lbl_user2), "Enter y-coordinate:");
    gtk_label_set_text(GTK_LABEL(app_wdgts->w_lbl_user3), "N/A");
    gtk_label_set_text(GTK_LABEL(app_wdgts->w_lbl_user4), "N/A:");
    gtk_label_set_text(GTK_LABEL(app_wdgts->w_lbl_user6), "N/A");
    break;
   case 2 : //Rectangle
+   gtk_label_set_text(GTK_LABEL(app_wdgts->w_lbl_user1), "Enter x-coordinate of bottom-left corner:");
+   gtk_label_set_text(GTK_LABEL(app_wdgts->w_lbl_user2), "Enter y-coordinate of bottom-left corner:");
    gtk_label_set_text(GTK_LABEL(app_wdgts->w_lbl_user3), "Enter length:");
    gtk_label_set_text(GTK_LABEL(app_wdgts->w_lbl_user4), "Enter height");
    gtk_label_set_text(GTK_LABEL(app_wdgts->w_lbl_user6), "(Optional) Fill the Rectangle?");
    break;
   case 3 : //Circle
+   gtk_label_set_text(GTK_LABEL(app_wdgts->w_lbl_user1), "Enter x-coordinate of center:");
+   gtk_label_set_text(GTK_LABEL(app_wdgts->w_lbl_user2), "Enter y-coordinate of center:");
    gtk_label_set_text(GTK_LABEL(app_wdgts->w_lbl_user3), "Enter radius");
    gtk_label_set_text(GTK_LABEL(app_wdgts->w_lbl_user4), "N/A");
    gtk_label_set_text(GTK_LABEL(app_wdgts->w_lbl_user6), "(Optional) Fill the Circle?");
