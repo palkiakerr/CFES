@@ -153,7 +153,7 @@ void on_btn_add_object_clicked(GtkButton *button, app_widgets *app_wdgts) {
   case 1 : //Point
     //printf("Point entered: (%d,%d) with magnitude %f\n",x1,y1,magnitude);
     //fprintf(f,"Point entered: (%d,%d) with magnitude %f\n",x1,y1,magnitude);
-    matrix[x1][y1]=magnitude;
+    matrix[y1][x1]=magnitude;
     break;
   
   case 2 : //Rectangle
