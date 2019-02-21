@@ -265,6 +265,7 @@ void on_btn_generate_clicked (GtkButton *button, app_widgets *app_wdgts) {
 
   printf("Passing Matrix to calculation handler\n");
   calc_handle(dimension, 0.0001);// Take tolerance from a button soon
+  gtk_main_quit();
 }
 
 
