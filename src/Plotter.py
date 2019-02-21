@@ -36,9 +36,10 @@ X, Y = np. meshgrid (x,y)
 
 ###### Plots ########
 ### Input Charges ###
-plt.subplot(2,2,1)
+plt.subplot(2,2,1) #2 rows, 2 columns, 1st image
 plt.imshow(V, cmap='Greys')
 plt.gca().invert_yaxis()
+plt. colorbar ()
 plt.title("Charges")
 
 ### Potential HeatMap ###
@@ -55,15 +56,17 @@ h=int(round(dim/35))
 skip = (slice(None, None, h), slice(None, None, h))
 fig =plt.quiver(X[skip], Y[skip], E_x[skip]/E_norm[skip], E_y[skip]/E_norm[skip], E_norm[skip], cmap='gist_rainbow', clim=[0,np.amax(E_norm)], scale=30, headwidth=5)
 plt.colorbar()
+plt.gca().set_aspect('equal', adjustable='box')
 plt. title('Electric field')
 
 ### Equipotential ###
 plt.subplot(2,2,4)
 matplotlib.rcParams ['xtick.direction'] = 'out'
 matplotlib.rcParams ['ytick.direction'] = 'out'
-CS = plt. contour (X,Y,V,50) # Make a contour plot = Controur Set
+CS = plt. contour (X,Y,V,20) #number shows the density of countour lines
 plt. clabel (CS , inline =1, fontsize =10)
-CB = plt. colorbar (CS , shrink =0.8 , extend ='both')
+plt. colorbar()
+plt.gca().set_aspect('equal', adjustable='box')
 plt. title ('Equipotential Lines')
 
 ### Plot and Save ###
