@@ -518,17 +518,17 @@ int jacobi(int dim, double b[], int boundaryflag[], float tolerance){
 
 
         // Top Edge
-        if(j==0){x_1[i][j] = 0.25*(x[i+1][j] + x[i-1][j] + x[i][j+1]);continue;}
+        if(j==0){x_1[i][j] = 0.3333333*(x[i+1][j] + x[i-1][j] + x[i][j+1]);continue;}
 
         // Bottom Edge
-        if(j==dim-1){x_1[i][j] = 0.25*(x[i-1][j] + x[i+1][j] + x[i][j-1]);continue;}
+        if(j==dim-1){x_1[i][j] = 0.333333*(x[i-1][j] + x[i+1][j] + x[i][j-1]);continue;}
 
         // Left Edge
-        if(i==0){x_1[i][j] = 0.25*(x[i+1][j] + x[i][j+1] + x[i][j-1]);continue;}
+        if(i==0){x_1[i][j] = 0.3333333*(x[i+1][j] + x[i][j+1] + x[i][j-1]);continue;}
 
 
         // Right Edge
-        if(i==dim-1){x_1[i][j] = 0.25*(x[i-1][j] + x[i][j+1] + x[i][j-1]);continue;}
+        if(i==dim-1){x_1[i][j] = 0.3333333*(x[i-1][j] + x[i][j+1] + x[i][j-1]);continue;}
 
 
         x_1[i][j] = 0.25*(x[i+1][j] + x[i-1][j] + x[i][j+1] + x[i][j-1]);
