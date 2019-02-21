@@ -13,7 +13,7 @@ FILE *f;
 
 int readboundary(double tgt[], int boundaryflag[], int dim);
 int solve(int dimension, double boundary[], int boundaryflag[]);
-int sparse_solve(int dimension, double boundary[], int boundaryflag[], int threshold);
+int sparse_solve(int dimension, double boundary[], int boundaryflag[], int itermax);
 int jacobi(int dimension, double boundary[], int boundaryflag[], float tolerance);
 int calc_handle(int dimension, float tolerance);
 
@@ -349,9 +349,15 @@ int solve(int dim, double bpass[], int boundaryflag[]){
   // Create/Convert arrays into gsl matrix types
   // Create coefficients array and turn it into a matrix
   gsl_matrix *A = gsl_matrix_alloc(dim*dim,dim*dim);
-
+  
   // Create b vector from passed array (boundary conditions)
-  gsl_vector_view b = gsl_vector_view_array(bpass, dim*dim);
+  gsl_vector *b = gsl_vector_calloc(dim*dim);
+
+  // Convert 1D to 2D
+  for(long i =0; i<dim*dim;i++){
+    gsl_vector_set(b, i, bpass[i]);
+  }
+
 
   // Create empty "x" vector
   gsl_vector *x = gsl_vector_alloc(dim*dim);
@@ -394,10 +400,12 @@ int solve(int dim, double bpass[], int boundaryflag[]){
   // direct matrix method)
   int s;
 
+  printf("\n\n%d\n\n",dim);
+
   gsl_permutation * p = gsl_permutation_alloc (dim*dim);
 
   gsl_linalg_LU_decomp (A, p, &s);
-  gsl_linalg_LU_solve (A, p, &b.vector, x);
+  gsl_linalg_LU_solve (A, p, b, x);
 
   FILE *fp;
   fp = fopen("output.txt", "w");
@@ -412,17 +420,22 @@ int solve(int dim, double bpass[], int boundaryflag[]){
 
 
 
-int sparse_solve(int dim, double bpass[], int boundaryflag[], int threshold){
+int sparse_solve(int dim, double bpass[], int boundaryflag[], int itermax){
 
   // Create/Convert arrays into gsl matrix types
   // Create coefficients array and turn it into a matrix
   gsl_spmatrix *A = gsl_spmatrix_alloc(dim*dim,dim*dim);
 
   // Create b vector from passed array (boundary conditions)
-  gsl_vector_view b = gsl_vector_view_array(bpass, dim*dim);
+  gsl_vector *b = gsl_vector_alloc(dim*dim);
 
+  // Convert 1D to 2D
+  for(long i =0; i<dim*dim;i++){
+    gsl_vector_set(b, i, bpass[i]);
+  }
   // Create empty "x" vector
   gsl_vector *x = gsl_vector_calloc(dim*dim);
+
 
 
   // Now need to create the correct forms of the matrices to solve the problem
@@ -455,13 +468,12 @@ int sparse_solve(int dim, double bpass[], int boundaryflag[], int threshold){
     }
   }
 
-
-
+ printf("\n\n%d\n\n",dim);
 
   // Now solve the sparse linear system using iterativ methods
-  gsl_splinalg_itersolve *solv_space=gsl_splinalg_itersolve_alloc(gsl_splinalg_itersolve_gmres, dim*dim, dim*dim);
+  gsl_splinalg_itersolve *solv_space=gsl_splinalg_itersolve_alloc(gsl_splinalg_itersolve_gmres, dim*dim, 0);
 
-  gsl_splinalg_itersolve_iterate(A, &b.vector, 0, x, solv_space);
+  gsl_splinalg_itersolve_iterate(A, b, 0.1, x, solv_space);
   
   gsl_splinalg_itersolve_free(solv_space);
   gsl_vector_fprintf(stdout, x, "%g");
