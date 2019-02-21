@@ -281,8 +281,7 @@ int calc_handle(int dimension, float tolerance){
   //sparse_solve(dimension,b , boundaryflag, 2);
   jacobi(dimension,b ,boundaryflag, tolerance);
 
-  system("python E_field.py > /dev/null");
-  system("python P_field.py > /dev/null");
+  system("python Plotter.py > /dev/null");
 
 
   exit(0);
