@@ -37,7 +37,7 @@ X, Y = np. meshgrid (x,y)
 ###### Plots ########
 ### Input Charges ###
 plt.subplot(2,2,1) #2 rows, 2 columns, 1st image
-plt.imshow(V, cmap='Greys')
+plt.imshow(V_in, cmap='Greys')
 plt.gca().invert_yaxis()
 plt. colorbar ()
 plt.title("Charges")
@@ -49,7 +49,7 @@ CB = plt. colorbar()
 plt.gca().invert_yaxis()
 plt. title ('Potential')
 
-### Electric Field ###
+### Electri Field ###
 plt.subplot(2,2,3)
 #Comment in for binary colours
 h=int(round(dim/35))
@@ -61,10 +61,10 @@ plt. title('Electric field')
 
 ### Equipotential ###
 plt.subplot(2,2,4)
-#matplotlib.rcParams ['xtick.direction'] = 'out'
-#matplotlib.rcParams ['ytick.direction'] = 'out'
+matplotlib.rcParams ['xtick.direction'] = 'out'
+matplotlib.rcParams ['ytick.direction'] = 'out'
 CS = plt. contour (X,Y,V,20) #number shows the density of countour lines
-#plt. clabel (CS , inline =1, fontsize =10)
+plt. clabel (CS , inline =1, fontsize =10)
 plt. colorbar()
 plt.gca().set_aspect('equal', adjustable='box')
 plt. title ('Equipotential Lines')
