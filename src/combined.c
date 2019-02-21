@@ -110,23 +110,28 @@ void on_btn_show_option_clicked(GtkButton *button, app_widgets *app_wdgts) {
   if (strcmp(item_text, "Circle") == 0) {object_type=3;}
 
   //Requirements for every type of entry
-   gtk_label_set_text(GTK_LABEL(app_wdgts->w_lbl_user1), "Enter x-coordinate:");
-   gtk_label_set_text(GTK_LABEL(app_wdgts->w_lbl_user2), "Enter y-coordinate:");
+
    gtk_label_set_text(GTK_LABEL(app_wdgts->w_lbl_user5), "Enter magnitude (<100,000):");
   
   //Requests the user for inputs corresponding to object types
   switch(object_type) {
   case 1 ://Point
+   gtk_label_set_text(GTK_LABEL(app_wdgts->w_lbl_user1), "Enter x-coordinate:");
+   gtk_label_set_text(GTK_LABEL(app_wdgts->w_lbl_user2), "Enter y-coordinate:");
    gtk_label_set_text(GTK_LABEL(app_wdgts->w_lbl_user3), "N/A");
    gtk_label_set_text(GTK_LABEL(app_wdgts->w_lbl_user4), "N/A:");
    gtk_label_set_text(GTK_LABEL(app_wdgts->w_lbl_user6), "N/A");
    break;
   case 2 : //Rectangle
+   gtk_label_set_text(GTK_LABEL(app_wdgts->w_lbl_user1), "Enter x-coordinate of bottom-left corner:");
+   gtk_label_set_text(GTK_LABEL(app_wdgts->w_lbl_user2), "Enter y-coordinate of bottom-left corner:");
    gtk_label_set_text(GTK_LABEL(app_wdgts->w_lbl_user3), "Enter length:");
    gtk_label_set_text(GTK_LABEL(app_wdgts->w_lbl_user4), "Enter height");
    gtk_label_set_text(GTK_LABEL(app_wdgts->w_lbl_user6), "(Optional) Fill the Rectangle?");
    break;
   case 3 : //Circle
+   gtk_label_set_text(GTK_LABEL(app_wdgts->w_lbl_user1), "Enter x-coordinate of center:");
+   gtk_label_set_text(GTK_LABEL(app_wdgts->w_lbl_user2), "Enter y-coordinate of center:");
    gtk_label_set_text(GTK_LABEL(app_wdgts->w_lbl_user3), "Enter radius");
    gtk_label_set_text(GTK_LABEL(app_wdgts->w_lbl_user4), "N/A");
    gtk_label_set_text(GTK_LABEL(app_wdgts->w_lbl_user6), "(Optional) Fill the Circle?");
@@ -317,7 +322,7 @@ int readboundary(double b[], int boundaryflag[], int dim){
 
       // Remember which zeros and numbers are boundary conditions using a second vector
       // called boundaryflag
-      if(c<0.01 && c>0){
+      if(c<0.001 && c>=0){
         b[i]=0;
         boundaryflag[i]=0;
       }
@@ -513,22 +518,22 @@ int jacobi(int dim, double b[], int boundaryflag[], float tolerance){
 
 
         // Top Edge
-        if(j==0){x_1[i][j] = 0.25*(x[i+1][j] + x[i-1][j] + x[i][j+1]);continue;}
+        if(j==0){x_1[i][j] = 0.3333333*(x[i+1][j] + x[i-1][j] + x[i][j+1]);continue;}
 
         // Bottom Edge
-        if(j==dim-1){x_1[i][j] = 0.25*(x[i-1][j] + x[i+1][j] + x[i][j-1]);continue;}
+        if(j==dim-1){x_1[i][j] = 0.333333*(x[i-1][j] + x[i+1][j] + x[i][j-1]);continue;}
 
         // Left Edge
-        if(i==0){x_1[i][j] = 0.25*(x[i+1][j] + x[i][j+1] + x[i][j-1]);continue;}
+        if(i==0){x_1[i][j] = 0.3333333*(x[i+1][j] + x[i][j+1] + x[i][j-1]);continue;}
 
 
         // Right Edge
-        if(i==dim-1){x_1[i][j] = 0.25*(x[i-1][j] + x[i][j+1] + x[i][j-1]);continue;}
+        if(i==dim-1){x_1[i][j] = 0.3333333*(x[i-1][j] + x[i][j+1] + x[i][j-1]);continue;}
 
 
         x_1[i][j] = 0.25*(x[i+1][j] + x[i-1][j] + x[i][j+1] + x[i][j-1]);
 
-        err += x_1[i][j] - x[i][j];
+        err += abs(x_1[i][j]) - abs(x[i][j]);
       }
     }
 
