@@ -322,7 +322,7 @@ int readboundary(double b[], int boundaryflag[], int dim){
 
       // Remember which zeros and numbers are boundary conditions using a second vector
       // called boundaryflag
-      if(c<0.001 && c>0){
+      if(c<0.001 && c>=0){
         b[i]=0;
         boundaryflag[i]=0;
       }
@@ -533,7 +533,7 @@ int jacobi(int dim, double b[], int boundaryflag[], float tolerance){
 
         x_1[i][j] = 0.25*(x[i+1][j] + x[i-1][j] + x[i][j+1] + x[i][j-1]);
 
-        err += x_1[i][j] - x[i][j];
+        err += abs(x_1[i][j]) - abs(x[i][j]);
       }
     }
 
