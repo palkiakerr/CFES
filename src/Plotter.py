@@ -55,15 +55,15 @@ CB = plt. colorbar (CS , shrink =0.8 , extend ='both')
 
 
 plt.subplot(2,2,1)
-#fig =plt.quiver(X, Y, 1.25*E_x/E_norm, 1.25*E_y/E_norm, E_norm, cmap='binary', clim=[0,np.amax(E_norm)], scale=80, headwidth=1)
 
-#Comment in for binary colours int(round(dim/33.33)
+#Comment in for binary colours
 h=int(round(dim/35))
 
 skip = (slice(None, None, h), slice(None, None, h))
 
 
-fig =plt.quiver(X[skip], Y[skip], E_x[skip]/E_norm[skip], E_y[skip]/E_norm[skip], E_norm[skip], cmap='gist_rainbow', clim=[0,np.amax(E_norm)], scale=30, headwidth=5)
+fig =plt.quiver(X[skip], Y[skip], E_x[skip]/E_norm[skip], E_y[skip]/E_norm[skip], E_norm[skip], cmap='binary', clim=[0,np.amax(E_norm)], scale=30, headwidth=5)
+#fig =plt.quiver(X, Y, 1.25*E_x/E_norm, 1.25*E_y/E_norm, E_norm, cmap='binary', clim=[0,np.amax(E_norm)], scale=80, headwidth=1)
 cb = plt.colorbar(fig)
 plt. title ('Electric field')
 plt.suptitle("Insert catchy title here")

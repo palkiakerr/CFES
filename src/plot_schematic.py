@@ -11,4 +11,5 @@ V = np.reshape(data, (N,N)) #reshape the data
 V[abs(V) < 0.000002 ] = 0
 
 plt.imshow(V, cmap='Greys')
+plt.gca().invert_yaxis()
 plt.savefig('schematic.png', bbox_inches='tight')

@@ -311,7 +311,7 @@ int readboundary(double b[], int boundaryflag[], int dim){
     
     
 
-    for(int i = 0; i<dim*dim; i++){
+    for(long i = 0; i<dim*dim; i++){
       float c;
       fscanf(fp,"%f ", &c);
 
@@ -354,7 +354,7 @@ int solve(int dim, double bpass[], int boundaryflag[]){
   // Now need to create the correct forms of the matrices to solve the problem
   // as the current matrices are empty/garbage data. See p1029 of numerical
   // recipies for what the matrix should look like (tri-diagonal with fringes)
-  for(int i = 0; i < (dim*dim); i++){
+  for(long i = 0; i < (dim*dim); i++){
 
     if(boundaryflag[i]==1){
       gsl_matrix_set(A,i,i,1);
@@ -422,7 +422,7 @@ int sparse_solve(int dim, double bpass[], int boundaryflag[], int threshold){
   // Now need to create the correct forms of the matrices to solve the problem
   // as the current matrices are empty/garbage data. See p1029 of numerical
   // recipies for what the matrix should look like (tri-diagonal with fringes)
-  for(int i = 0; i < (dim*dim); i++){
+  for(long i = 0; i < (dim*dim); i++){
 
     if(boundaryflag[i]==1){
       gsl_spmatrix_set(A,i,i,1);
@@ -488,7 +488,7 @@ int jacobi(int dim, double b[], int boundaryflag[], float tolerance){
 
 
   // Jacobi Relaxation Method
-  for(int iters = 0; iters < 10000000000; iters++){
+  while(1){
     err = 0;
 
     for(int i=0;i<dim;i++){
