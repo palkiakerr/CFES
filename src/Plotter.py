@@ -50,7 +50,7 @@ plt.title("Charges")
 
 ### Potential HeatMap ###
 plt.subplot(2,2,2)
-plt.imshow(V, cmap='hot', interpolation='nearest')
+plt.imshow(V, cmap='inferno', interpolation='nearest')
 CB = plt. colorbar()
 plt.gca().invert_yaxis()
 plt. title ('Potential')
