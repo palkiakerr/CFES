@@ -264,8 +264,13 @@ void on_btn_generate_clicked (GtkButton *button, app_widgets *app_wdgts) {
   fclose(f);
 
   printf("Passing Matrix to calculation handler\n");
+<<<<<<< HEAD
+  calc_handle(dimension, 500000);// Take tolerance from a button soon
+  gtk_main_quit();
+=======
   calc_handle(dimension, 0.0001);// Take tolerance from a button soon
   //gtk_main_quit();
+>>>>>>> 1da759f51385cb7cb4fc36383dad0bced2cf133c
 }
 
 
@@ -506,7 +511,7 @@ int jacobi(int dim, double b[], int boundaryflag[], float tolerance){
 
 
   // Jacobi Relaxation Method
-  while(1){
+  for(int k = 0; k<tolerance; k++){
     err = 0;
 
     for(int i=0;i<dim;i++){
@@ -552,7 +557,7 @@ int jacobi(int dim, double b[], int boundaryflag[], float tolerance){
 
     memcpy(x,x_1,dim*dim*8);
     err = err/(dim*dim);
-    if(err < tolerance){break;}
+    //if(err < tolerance){break;}
   }
 
   FILE *fp;
