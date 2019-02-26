@@ -73,7 +73,7 @@
 
 Please follow the instructions below first.
 
-    • The first entry determines the dimension of the matrix. Enter the desired dimension then click “Generate matrix”. As indicated on the button, this will overwrite the existing matrix, so only do this if a new system is being entered.
+    • The first entry determines the dimension of the matrix. Enter the desired dimension and number of iterations then click “Generate matrix”. As indicated on the button, this will overwrite the existing matrix, so only do this if a new system is being entered.
 
     • The second button determines the type of object being added. Please select one of the object types from the drop down button and click “Select option”. This will prompt the user for the relevant entries.
     • Add the relevant entries and click “Add object”.
