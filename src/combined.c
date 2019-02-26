@@ -8,19 +8,21 @@
 
 int type;
 int dimension;
+int num_iterations;
 float matrix[1000][1000];
 FILE *f;
 
 int readboundary(double tgt[], int boundaryflag[], int dim);
 int solve(int dimension, double boundary[], int boundaryflag[]);
 int sparse_solve(int dimension, double boundary[], int boundaryflag[], int itermax);
-int jacobi(int dimension, double boundary[], int boundaryflag[], float tolerance);
-int calc_handle(int dimension, float tolerance);
+int jacobi(int dimension, double boundary[], int boundaryflag[], int num_iterations);
+int calc_handle(int dimension, int num_iterations);
 
 typedef struct {
   GtkWidget *w_comboboxtext_options;
   GtkWidget *w_lbl_sel_text;
   GtkWidget *w_sbtn_quantity;
+  GtkWidget *w_sbtn_iterations;
   GtkWidget *w_btn_matrix;
   GtkWidget *w_lbl_user1;
   GtkWidget *w_lbl_user2;
@@ -56,6 +58,7 @@ int main(int argc, char *argv[])
     widgets->w_comboboxtext_options = GTK_WIDGET(gtk_builder_get_object(builder, "comboboxtext_options"));
     widgets->w_lbl_sel_text = GTK_WIDGET(gtk_builder_get_object(builder, "lbl_sel_text"));
     widgets->w_sbtn_quantity = GTK_WIDGET(gtk_builder_get_object(builder, "sbtn_quantity"));
+    widgets->w_sbtn_iterations = GTK_WIDGET(gtk_builder_get_object(builder, "sbtn_iterations"));
     widgets->w_btn_matrix = GTK_WIDGET(gtk_builder_get_object(builder, "btn_matrix"));
     widgets->w_lbl_user1 = GTK_WIDGET(gtk_builder_get_object(builder, "lbl_user1"));
     widgets->w_lbl_user2 = GTK_WIDGET(gtk_builder_get_object(builder, "lbl_user2"));
@@ -148,7 +151,7 @@ void on_btn_add_object_clicked(GtkButton *button, app_widgets *app_wdgts) {
   float radius,magnitude;
   f = fopen("matrix.txt","w");
 
-    filled=gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(app_wdgts->w_tbtn_user));
+    filled = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(app_wdgts->w_tbtn_user));
     x1 = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(app_wdgts->w_sbtn_user1));
     y1 = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(app_wdgts->w_sbtn_user2));
     magnitude = gtk_spin_button_get_value(GTK_SPIN_BUTTON(app_wdgts->w_sbtn_user5));
@@ -232,6 +235,7 @@ void on_btn_matrix_clicked(GtkButton *button, app_widgets *app_wdgts) {
 
   //stores integer read from spin button widget
   dimension = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(app_wdgts->w_sbtn_quantity));
+  num_iterations = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(app_wdgts->w_sbtn_iterations));
   
   //outputs dimension and initialises matrix elements
   //printf("Matrix dimension is %d\n", dimension);
@@ -260,16 +264,16 @@ void on_btn_generate_clicked (GtkButton *button, app_widgets *app_wdgts) {
   }
   fclose(fp);
   printf("Matrix successfully outputted to matrix.txt!\n");
-   fprintf(f,"Matrix successfully outputted to matrix.txt!\n");
+  fprintf(f,"Matrix successfully outputted to matrix.txt!\n");
   fclose(f);
 
   printf("Passing Matrix to calculation handler\n");
-  calc_handle(dimension, 500000);// Take tolerance from a button soon
+  calc_handle(dimension, num_iterations);// Take tolerance from a button soon
   gtk_main_quit();
 }
 
 
-int calc_handle(int dimension, float tolerance){
+int calc_handle(int dimension, int num_iterations){
 
   // Create and fill matrix, we use the naming convention for a normal
   // matrix problem i.e. Ax=b
@@ -285,7 +289,7 @@ int calc_handle(int dimension, float tolerance){
   // Passes the matrix system (Ax=b) to the solver
   //solve(dimension, b, boundaryflag);
   //sparse_solve(dimension,b , boundaryflag, 2);
-  jacobi(dimension,b ,boundaryflag, tolerance);
+  jacobi(dimension,b ,boundaryflag, num_iterations);
 
   system("python Plotter.py > /dev/null");
 
@@ -488,7 +492,7 @@ int sparse_solve(int dim, double bpass[], int boundaryflag[], int itermax){
  
 }
 
-int jacobi(int dim, double b[], int boundaryflag[], float tolerance){
+int jacobi(int dim, double b[], int boundaryflag[], int num_iterations){
   
   // Initalist calcu9lation arrays
   int boundary[dim][dim];
@@ -506,7 +510,7 @@ int jacobi(int dim, double b[], int boundaryflag[], float tolerance){
 
 
   // Jacobi Relaxation Method
-  for(int k = 0; k<tolerance; k++){
+  for(int k = 0; k<num_iterations; k++){
     err = 0;
 
     for(int i=0;i<dim;i++){
