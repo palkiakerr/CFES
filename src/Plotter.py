@@ -58,7 +58,8 @@ plt. title ('Potential')
 ### Electric Field ###
 plt.subplot(2,2,3)
 #Comment in for binary colours
-h=int(round(dim/35))
+# TODO: this 35 variable seems arbitrary but this if skips [::0] ValueError
+h = int(round(dim/35)) if dim > 35 else 1
 skip = (slice(None, None, h), slice(None, None, h))
 fig=plt.quiver(X[skip], Y[skip], E_x[skip]/E_norm[skip], E_y[skip]/E_norm[skip], E_norm[skip], cmap='gist_rainbow', clim=[0,np.amax(E_norm)], scale=30, headwidth=5)
 plt.colorbar()
