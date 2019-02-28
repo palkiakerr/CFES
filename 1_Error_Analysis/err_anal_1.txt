@@ -1,0 +1,56 @@
+1st Analytical Problem
+### Do it on Excell ###
+
+
+Centre = 50,50
+V0 = 50 (outer potential)
+R = 50 radius of the shell
+V_ground = 0.01
+r = 10 (radius of Ground) 
+
+########
+Dim = 101
+
+1000
+The biggest error is 10.466935677703123
+The average error is 5.201754962329117
+
+2000
+The biggest error is 2.758843466829113
+The average error is 1.3378929346847679
+
+5000
+The biggest error is 1.63775473983579
+The average error is 0.29712337856281906
+
+7000
+The biggest error is 1.63775473983579
+The average error is 0.28557334307610216
+
+10000
+The biggest error is 1.63775473983579
+The average error is 0.28494746384857544
+
+50000
+The biggest error is 1.63775473983579
+The average error is 0.2849399418409291
+
+100000
+The biggest error is 1.63775473983579
+The average error is 0.2849399418409291
+
+
+##############
+Dim = 201
+
+10000
+The biggest error is 3.2419599121347638
+The average error is 1.5098741268429743
+
+100000
+The biggest error is 1.0339655363409983
+The average error is 0.12178319463832596
+
+500000
+The biggest error is 1.0339655363409983
+The average error is 0.12178319444031106
