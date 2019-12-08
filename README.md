@@ -1,8 +1,9 @@
 # CFES - Classical Field Equation Solver
 ###### Theoretical Physics Group Programming Project
 
+Note: You must have the Gnu Scientific Library (GSL) installed to compile CFES
 
-Please follow the instructions below first.
+Please follow the instructions below for the GUI.
 
     • The first entry determines the dimension of the matrix. Enter the desired dimension and number of iterations then click “Generate matrix”. As indicated on the button, this will overwrite the existing matrix, so only do this if a new system is being entered.
 
